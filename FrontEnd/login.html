@@ -125,7 +125,7 @@
 
  <script src="galaxy.js"></script>
     <script>
-    // --- Auth Navigation ---
+    
     function updateNav() {
         const token = localStorage.getItem('token');
         if (token) {
@@ -146,7 +146,7 @@
         window.location.href = 'index.html';
     }
 
-    // --- Toggle Login/Signup ---
+    
     function toggleForm(form) {
         if (form === 'signup') {
             document.getElementById('login-form').style.display = 'none';
@@ -156,3 +156,6 @@
             document.getElementById('signup-form').style.display = 'none';
         }
     }
+    
+ </script>
+    <script src="script.js"></script>
