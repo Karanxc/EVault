@@ -15,3 +15,13 @@ const PINATA_API_KEY = 'PINATA_API_KEY_CHANGE_ME'; ///ADD YOUR PINATA API KEY HE
 const PINATA_API_SECRET = 'PINATA_API_SECRET_CHANGE_ME';   ///ADD YOUR PINATA API SECRET HERE
 const INFURA_ENDPOINT = 'https://INFURA_ENDPOINT_CHANGE_ME'; ///ADD YOUR INFURA ENDPOINT HERE
 const CONTRACT_ADDRESS = 'CONTRACT_ADDRESS_CHANGE_ME';  ///ADD YOUR DEPLOYED CONTRACT ADDRESS HERE
+const CONTRACT_ABI = [
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
