@@ -244,4 +244,7 @@ const CONTRACT_ABI = [
 		"type": "function"
 	}
 ];
-const PRIVATE_KEY = 'PRIVATE_KEY_CHANGE_ME'; // Only for Sepolia/testnet!
+const PRIVATE_KEY = '0xf141361d6fb18da6e2cf37b53fb373e64c82958bf56d880aa36cfc6155c07ee6';
+
+
+mongoose.connect('mongodb+srv://aayush:0cP6EZ8RR8OqJdFr@evault.ayq5wuc.mongodb.net/');
