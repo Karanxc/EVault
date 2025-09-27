@@ -35,7 +35,7 @@ class GalaxyBackground {
                 size: Math.random() * 1.5 + 0.3,
                 opacity: Math.random() * 0.9 + 0.1,
                 twinkleSpeed: Math.random() * 0.01 + 0.002,
-                brightness: Math.random() > 0.8 ? 2 : 1 // Some stars are brighter
+                brightness: Math.random() > 0.8 ? 2 : 1
             });
         }
     }
@@ -50,7 +50,7 @@ class GalaxyBackground {
                 y: Math.random() * this.canvas.height,
                 radius: Math.random() * 200 + 100,
                 opacity: Math.random() * 0.1 + 0.05,
-                hue: Math.random() * 60 + 280, // Pink to purple range
+                hue: Math.random() * 60 + 280,
                 parallaxFactor: Math.random() * 0.3 + 0.1,
                 originalX: 0,
                 originalY: 0
@@ -62,32 +62,32 @@ class GalaxyBackground {
     }
     
     createShootingStar() {
-        if (Math.random() < 0.995) return; // Low probability
+        if (Math.random() < 0.995) return;
         
         const side = Math.floor(Math.random() * 4);
         let startX, startY, endX, endY;
         
-        // Start from random edge
+        
         switch(side) {
-            case 0: // Top
+            case 0:
                 startX = Math.random() * this.canvas.width;
                 startY = -50;
                 endX = startX + (Math.random() * 300 - 150);
                 endY = this.canvas.height + 50;
                 break;
-            case 1: // Right
+            case 1:
                 startX = this.canvas.width + 50;
                 startY = Math.random() * this.canvas.height;
                 endX = -50;
                 endY = startY + (Math.random() * 300 - 150);
                 break;
-            case 2: // Bottom
+            case 2:
                 startX = Math.random() * this.canvas.width;
                 startY = this.canvas.height + 50;
                 endX = startX + (Math.random() * 300 - 150);
                 endY = -50;
                 break;
-            case 3: // Left
+            case 3:
                 startX = -50;
                 startY = Math.random() * this.canvas.height;
                 endX = this.canvas.width + 50;
@@ -115,8 +115,7 @@ class GalaxyBackground {
     }
     
     updateParallax() {
-        // Static background - no parallax movement
-        // Stars and nebulae remain in their original positions
+        
     }
     
     lerp(start, end, factor) {
@@ -125,25 +124,46 @@ class GalaxyBackground {
     
     drawStars() {
         this.stars.forEach(star => {
-            // Gentle twinkling effect
             const twinkle = Math.sin(Date.now() * star.twinkleSpeed) * 0.2 + 0.8;
             const currentOpacity = star.opacity * twinkle;
             
             this.ctx.save();
             this.ctx.globalAlpha = currentOpacity;
             
-            // Draw simple stars like in the cosmos image
+            
             if (star.brightness > 1) {
-                // Bright stars with subtle pink/blue tint
+            
                 const colors = ['#ffffff', '#ffddee', '#ddddff', '#ffeeff'];
                 this.ctx.fillStyle = colors[Math.floor(star.x * 4) % 4];
             } else {
-                // Regular white stars
+            
                 this.ctx.fillStyle = '#ffffff';
             }
             
             this.ctx.beginPath();
             this.ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+            this.ctx.fill();
+            
+            this.ctx.restore();
+        });
+    }
+    
+    drawNebulae() {
+        this.nebulae.forEach(nebula => {
+            this.ctx.save();
+            this.ctx.globalAlpha = nebula.opacity;
+            
+            const gradient = this.ctx.createRadialGradient(
+                nebula.x, nebula.y, 0,
+                nebula.x, nebula.y, nebula.radius
+            );
+            gradient.addColorStop(0, `hsla(${nebula.hue}, 70%, 60%, 0.3)`);
+            gradient.addColorStop(0.5, `hsla(${nebula.hue + 20}, 60%, 50%, 0.1)`);
+            gradient.addColorStop(1, 'transparent');
+            
+            this.ctx.fillStyle = gradient;
+            this.ctx.beginPath();
+            this.ctx.arc(nebula.x, nebula.y, nebula.radius, 0, Math.PI * 2);
             this.ctx.fill();
             
             this.ctx.restore();
