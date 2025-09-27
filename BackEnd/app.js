@@ -195,6 +195,7 @@ const CONTRACT_ABI = [
 		],
 		"stateMutability": "view",
 		"type": "function"
+<<<<<<< HEAD
 	},
 	{
 		"inputs": [
@@ -253,5 +254,5 @@ const CONTRACT_ABI = [
 
 const PRIVATE_KEY = '0xf141361d6fb18da6e2cf37b53fb373e64c82958bf56d880aa36cfc6155c07ee6';
 
-// --- MongoDB Setup ---
 mongoose.connect('mongodb+srv://aayush:0cP6EZ8RR8OqJdFr@evault.ayq5wuc.mongodb.net/');
+
