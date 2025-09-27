@@ -44,3 +44,17 @@ contract DocumentVault {
         );
     }
 }
+
+function getDocument(uint256 id) public view returns (
+        string memory, string memory, string memory, uint256, uint256, string memory, string memory, string memory, string memory
+    ) {
+        require(id < documents.length, "Invalid document ID");
+        Document memory doc = documents[id];
+        return (
+            doc.ipfsCid, doc.title, doc.description, doc.size, doc.timestamp, doc.author, doc.tags, doc.blockHash, doc.txHash
+        );
+    }
+
+    function getDocumentCount() public view returns (uint256) {
+        return documents.length;
+    }
