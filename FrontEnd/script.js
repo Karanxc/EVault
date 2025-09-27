@@ -188,3 +188,60 @@ function setView(viewType) {
 
     resultsContainer.className = `results-container ${viewType}-view`;
 }
+
+unction showDocumentDetails(docId) {
+    const doc = window._docs.find(d => d.id === docId);
+    if (!doc) return;
+    
+    const modal = document.getElementById('document-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalBody = document.getElementById('modal-body');
+    
+    modalTitle.textContent = doc.title;
+    
+    modalBody.innerHTML = `
+        <div class="document-details">
+            <div class="detail-group">
+                <label>Description</label>
+                <p>${doc.description}</p>
+            </div>
+            <div class="detail-row">
+                <div class="detail-group">
+                    <label>Size</label>
+                    <p>${doc.size}</p>
+                </div>
+            </div>
+            <div class="detail-group">
+                <label>Upload Date</label>
+                <p>${formatDate(doc.date)}</p>
+            </div>
+            <div class="detail-group">
+                <label>Author</label>
+                <p>${doc.author}</p>
+            </div>
+            <div class="detail-group">
+                <label>Tags</label>
+                <div class="tag-list">
+                    ${doc.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                </div>
+            </div>
+            <div class="blockchain-info">
+                <h4>Blockchain Information</h4>
+                <div class="detail-group">
+                    <label>Document Hash</label>
+                    <p class="hash-value">${doc.ipfsCid}</p>
+                </div>
+                <div class="detail-group">
+                    <label>Block Hash</label>
+                    <p class="hash-value">${doc.blockHash}</p>
+                </div>
+                <div class="detail-group">
+                    <label>Transaction ID</label>
+                    <p class="hash-value">${doc.txHash}</p>
+                </div>
+            </div>
+            <div class="document-actions">
+                <a href="https://gateway.pinata.cloud/ipfs/${doc.ipfsCid}" target="_blank" class="btn-primary">Download Document</a>
+                <a href="https://sepolia.etherscan.io/tx/${doc.txHash}" target="_blank" class="btn-secondary">Verify on Blockchain</a>
+            </div>
+        </div>
