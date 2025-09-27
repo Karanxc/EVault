@@ -337,3 +337,99 @@ unction showDocumentDetails(docId) {
         {scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.7)"}
     );
 }
+
+function closeModal() {
+    const modal = document.getElementById('document-modal');
+    modal.classList.remove('active');
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const modalOverlay = document.getElementById('document-modal');
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', function(e) {
+            if (e.target === modalOverlay) closeModal();
+        });
+    }
+});
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+}
+
+function formatSize(bytes) {
+    if (bytes > 1024 * 1024) return (bytes / 1024 / 1024).toFixed(2) + ' MB';
+    if (bytes > 1024) return (bytes / 1024).toFixed(2) + ' KB';
+    return bytes + ' bytes';
+}
+
+function setupNavigation() {
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+    }
+}
+
+function initializePage() {
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    checkAuthStatus();
+    setupNavigation();
+
+    if (currentPage === 'search.html') {
+        performDocumentSearch();
+        document.getElementById('search-input').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') performDocumentSearch();
+        });
+        document.getElementById('search-input').addEventListener('input', performSearchDebounced);
+        document.getElementById('date-filter').addEventListener('change', applyFilters);
+    }
+
+    setupAnimations();
+}
+
+function setupAnimations() {
+    const fadeElements = document.querySelectorAll('.about, .how-it-works, .auth-form, .upload-form, .search-controls');
+    fadeElements.forEach(element => {
+        if (element) {
+            gsap.fromTo(element, 
+                {opacity: 0, y: 50}, 
+                {opacity: 1, y: 0, duration: 1, ease: "power2.out", delay: 0.2}
+            );
+        }
+    });
+    const steps = document.querySelectorAll('.step');
+    if (steps.length > 0) {
+        gsap.fromTo(steps, 
+            {opacity: 0, y: 30}, 
+            {opacity: 1, y: 0, duration: 0.8, stagger: 0.2, ease: "power2.out", delay: 0.5}
+        );
+    }
+    const features = document.querySelectorAll('.feature');
+    if (features.length > 0) {
+        gsap.fromTo(features, 
+            {opacity: 0, x: -30}, 
+            {opacity: 1, x: 0, duration: 0.8, stagger: 0.2, ease: "power2.out", delay: 0.8}
+        );
+    }
+}
+
+document.addEventListener('DOMContentLoaded', initializePage);
+window.addEventListener('error', (e) => {
+    console.error('Application error:', e.error);
+});
