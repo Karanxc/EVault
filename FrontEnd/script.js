@@ -117,3 +117,74 @@ async function applyFilters() {
 
     displaySearchResults(filtered, query);
 }
+
+function displaySearchResults(results, query) {
+    const resultsContainer = document.getElementById('results-container');
+    const resultsCount = document.getElementById('results-count');
+    const noResults = document.getElementById('no-results');
+    
+    if (!resultsContainer) return;
+    
+    if (results.length === 0) {
+        resultsContainer.style.display = 'none';
+        noResults.style.display = 'block';
+        resultsCount.textContent = 'No results found';
+        return;
+    }
+    
+    resultsContainer.style.display = 'grid';
+    noResults.style.display = 'none';
+    
+    const countText = query ? 
+        `${results.length} result${results.length !== 1 ? 's' : ''} for "${query}"` :
+        `${results.length} document${results.length !== 1 ? 's' : ''}`;
+    
+    resultsCount.textContent = countText;
+    
+    resultsContainer.innerHTML = results.map(doc => `
+        <div class="document-card" onclick="showDocumentDetails(${doc.id})">
+            <div class="document-header">
+                <div>
+                    <div class="document-title">${doc.title}</div>
+                </div>
+                <div class="document-type">${doc.type ? doc.type.toUpperCase() : ''}</div>
+            </div>
+            <div class="document-description">${doc.description}</div>
+            <div class="document-meta">
+                <div class="document-date">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    ${formatDate(doc.date)}
+                </div>
+                <div class="document-hash">${doc.ipfsCid.substring(0, 12)}...</div>
+            </div>
+        </div>
+    `).join('');
+    
+    gsap.fromTo('.document-card', 
+        {opacity: 0, y: 30}, 
+        {opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: "power2.out"}
+    );
+    window._docs = results;
+}
+
+function setView(viewType) {
+    const resultsContainer = document.getElementById('results-container');
+    const viewButtons = document.querySelectorAll('.view-btn');
+    
+    currentView = viewType;
+    
+    viewButtons.forEach(btn => {
+        if (btn.dataset.view === viewType) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+
+    resultsContainer.className = `results-container ${viewType}-view`;
+}
