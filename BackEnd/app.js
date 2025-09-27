@@ -25,3 +25,9 @@ const CONTRACT_ABI = [
 				"name": "id",
 				"type": "uint256"
 			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "title",
+				"type": "string"
+			},
