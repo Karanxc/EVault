@@ -284,3 +284,93 @@ function authenticateJWT(req, res, next) {
     next();
   });
 }
+
+// --- Routes ---
+
+// Serve pages
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
+app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'public', 'login.html')));
+app.get('/search', (req, res) => res.sendFile(path.join(__dirname, 'public', 'search.html')));
+app.get('/upload', (req, res) => res.sendFile(path.join(__dirname, 'public', 'upload.html')));
+
+// --- Auth API ---
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (user && user.passwordHash === hashPassword(password)) {
+    const token = jwt.sign({ email: user.email, name: user.name, role: user.role }, JWT_SECRET, { expiresIn: '2h' });
+    res.json({ success: true, token, user: { email: user.email, name: user.name, role: user.role } });
+  } else {
+    res.status(401).json({ success: false, message: 'Invalid credentials' });
+  }
+});
+
+app.post('/api/signup', async (req, res) => {
+  const { name, email, password } = req.body;
+  if (!name || !email || !password) return res.status(400).json({ success: false, message: 'Missing fields' });
+  if (await User.findOne({ email })) return res.status(409).json({ success: false, message: 'User exists' });
+  const user = new User({ name, email, passwordHash: hashPassword(password), role: 'user' });
+  await user.save();
+  const token = jwt.sign({ email, name, role: 'user' }, JWT_SECRET, { expiresIn: '2h' });
+  res.json({ success: true, token, user: { email, name, role: 'user' } });
+});
+
+// --- Upload Document (Pinata + Ethereum) ---
+app.post('/api/upload', authenticateJWT, upload.single('file'), async (req, res) => {
+    const { title, description, tags } = req.body;
+    if (!title || !req.file) return res.status(400).json({ success: false, message: 'Missing fields' });
+
+    try {
+        // Pinata upload
+        const data = new FormData();
+        data.append('file', req.file.buffer, req.file.originalname);
+        const response = await axios.post('https://api.pinata.cloud/pinning/pinFileToIPFS', data, {
+            maxContentLength: Infinity,
+            maxBodyLength: Infinity,
+            headers: {
+                ...data.getHeaders(),
+                pinata_api_key: PINATA_API_KEY,
+                pinata_secret_api_key: PINATA_API_SECRET
+            }
+        });
+
+        const ipfsCid = response.data.IpfsHash;
+        const size = req.file.size;
+        const timestamp = Math.floor(Date.now() / 1000);
+        const author = req.user.name || req.user.email || '';
+
+        // Upload document WITHOUT blockHash and txHash
+        const tx = contract.methods.uploadDocument(
+            ipfsCid,
+            title,
+            description || '',
+            size,
+            timestamp,
+            author,
+            tags || '',
+			'', // blockHash
+    		''  // txHash
+        );
+        const gas = await tx.estimateGas({ from: account.address });
+        const receipt = await tx.send({ from: account.address, gas });
+
+        // Return blockHash and txHash from the transaction receipt
+        res.json({
+            success: true,
+            doc: {
+                title,
+                description,
+                tags: tags ? tags.split(',').map(t => t.trim()) : [],
+                ipfsCid,
+                size: size.toString(),
+                author,
+                timestamp: timestamp.toString(),
+                blockHash: receipt.blockHash,
+                txHash: receipt.transactionHash
+            }
+        });
+    } catch (err) {
+        console.error('Pinata or Ethereum upload error:', err.response?.data || err.message || err);
+        res.status(500).json({ success: false, message: 'Upload failed', error: err.message });
+    }
+});
