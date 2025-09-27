@@ -106,3 +106,46 @@ class GalaxyBackground {
             decay: Math.random() * 0.02 + 0.01
         });
     }
+
+    bindEvents() {
+        window.addEventListener('resize', () => {
+            this.resizeCanvas();
+            this.createStars();
+        });
+    }
+    
+    updateParallax() {
+        // Static background - no parallax movement
+        // Stars and nebulae remain in their original positions
+    }
+    
+    lerp(start, end, factor) {
+        return start + (end - start) * factor;
+    }
+    
+    drawStars() {
+        this.stars.forEach(star => {
+            // Gentle twinkling effect
+            const twinkle = Math.sin(Date.now() * star.twinkleSpeed) * 0.2 + 0.8;
+            const currentOpacity = star.opacity * twinkle;
+            
+            this.ctx.save();
+            this.ctx.globalAlpha = currentOpacity;
+            
+            // Draw simple stars like in the cosmos image
+            if (star.brightness > 1) {
+                // Bright stars with subtle pink/blue tint
+                const colors = ['#ffffff', '#ffddee', '#ddddff', '#ffeeff'];
+                this.ctx.fillStyle = colors[Math.floor(star.x * 4) % 4];
+            } else {
+                // Regular white stars
+                this.ctx.fillStyle = '#ffffff';
+            }
+            
+            this.ctx.beginPath();
+            this.ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+            this.ctx.fill();
+            
+            this.ctx.restore();
+        });
+    }
