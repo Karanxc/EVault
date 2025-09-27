@@ -374,3 +374,71 @@ app.post('/api/upload', authenticateJWT, upload.single('file'), async (req, res)
         res.status(500).json({ success: false, message: 'Upload failed', error: err.message });
     }
 });
+
+// --- Search Documents (from Ethereum) ---
+app.get('/api/search', async (req, res) => {
+  try {
+    const count = await contract.methods.getDocumentCount().call();
+    let docs = [];
+
+    // Fetch all DocumentUploaded events
+    const events = await contract.getPastEvents('DocumentUploaded', {
+      fromBlock: 0,
+      toBlock: 'latest'
+    });
+
+    // Map event logs by document ID
+    const eventMap = {};
+    events.forEach(ev => {
+      eventMap[ev.returnValues.id] = {
+        txHash: ev.transactionHash,
+        blockHash: ev.blockHash
+      };
+    });
+
+    for (let i = 0; i < Number(count); i++) {
+      const doc = await contract.methods.getDocument(i).call();
+      const eventData = eventMap[i] || {};
+      docs.push({
+        ipfsCid: doc[0],
+        title: doc[1],
+        description: doc[2],
+        size: typeof doc[3] === 'bigint' ? Number(doc[3]) : doc[3],
+        timestamp: typeof doc[4] === 'bigint' ? Number(doc[4]) : doc[4],
+        author: doc[5],
+        tags: doc[6],
+        blockHash: eventData.blockHash || "",
+        txHash: eventData.txHash || ""
+      });
+    }
+    res.json(docs);
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Search failed', error: err.message });
+  }
+});
+
+// --- Get Document Details ---
+app.get('/api/document/:id', async (req, res) => {
+  try {
+    const doc = await contract.methods.getDocument(req.params.id).call();
+    res.json({
+      success: true,
+      doc: {
+        ipfsCid: doc[0],
+        title: doc[1],
+        description: doc[2],
+        tags: doc[3],
+        owner: doc[4],
+        timestamp: doc[5]
+      }
+    });
+  } catch (err) {
+    res.status(404).json({ success: false, message: 'Not found' });
+  }
+});
+
+// --- Start Server ---
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`LegalVault app listening on port ${PORT}`);
+});
