@@ -248,3 +248,39 @@ const PRIVATE_KEY = '0xf141361d6fb18da6e2cf37b53fb373e64c82958bf56d880aa36cfc615
 
 
 mongoose.connect('mongodb+srv://aayush:0cP6EZ8RR8OqJdFr@evault.ayq5wuc.mongodb.net/');
+
+const userSchema = new mongoose.Schema({
+  name: String,
+  email: { type: String, unique: true },
+  passwordHash: String,
+  role: { type: String, default: 'user' }
+});
+const User = mongoose.model('User', userSchema);
+
+
+const web3 = new Web3(INFURA_ENDPOINT);
+const contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+const account = web3.eth.accounts.privateKeyToAccount(PRIVATE_KEY);
+web3.eth.accounts.wallet.add(account);
+
+
+const app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
+const upload = multer();
+
+
+function hashPassword(password) {
+  return crypto.createHash('sha256').update(password).digest('hex');
+}
+
+function authenticateJWT(req, res, next) {
+  const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
+  if (!token) return res.status(401).json({ success: false, message: 'No token provided' });
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ success: false, message: 'Invalid token' });
+    req.user = user;
+    next();
+  });
+}
