@@ -337,3 +337,51 @@ unction showDocumentDetails(docId) {
         {scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.7)"}
     );
 }
+
+function closeModal() {
+    const modal = document.getElementById('document-modal');
+    modal.classList.remove('active');
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const modalOverlay = document.getElementById('document-modal');
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', function(e) {
+            if (e.target === modalOverlay) closeModal();
+        });
+    }
+});
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+}
+
+function formatSize(bytes) {
+    if (bytes > 1024 * 1024) return (bytes / 1024 / 1024).toFixed(2) + ' MB';
+    if (bytes > 1024) return (bytes / 1024).toFixed(2) + ' KB';
+    return bytes + ' bytes';
+}
+
+function setupNavigation() {
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+    }
+}
