@@ -169,3 +169,71 @@ class GalaxyBackground {
             this.ctx.restore();
         });
     }
+
+    drawShootingStars() {
+        this.shootingStars.forEach((star, index) => {
+            // Move shooting star
+            const dx = star.endX - star.x;
+            const dy = star.endY - star.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance > star.speed) {
+                const ratio = star.speed / distance;
+                star.x += dx * ratio;
+                star.y += dy * ratio;
+            }
+            
+            star.life -= star.decay;
+            
+            if (star.life <= 0) {
+                this.shootingStars.splice(index, 1);
+                return;
+            }
+            
+            this.ctx.save();
+            this.ctx.globalAlpha = star.life;
+            
+            // Create shooting star trail
+            const gradient = this.ctx.createLinearGradient(
+                star.x, star.y,
+                star.x - dx * 0.1, star.y - dy * 0.1
+            );
+            gradient.addColorStop(0, '#ffffff');
+            gradient.addColorStop(0.3, '#ff69b4');
+            gradient.addColorStop(1, 'transparent');
+            
+            this.ctx.strokeStyle = gradient;
+            this.ctx.lineWidth = star.size;
+            this.ctx.lineCap = 'round';
+            
+            this.ctx.beginPath();
+            this.ctx.moveTo(star.x, star.y);
+            this.ctx.lineTo(star.x - dx * 0.1, star.y - dy * 0.1);
+            this.ctx.stroke();
+            
+            // Draw shooting star head
+            this.ctx.fillStyle = '#ffffff';
+            this.ctx.beginPath();
+            this.ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+            this.ctx.fill();
+            
+            this.ctx.restore();
+        });
+    }
+    
+    animate() {
+        // Clear canvas completely for static background
+        this.ctx.fillStyle = '#0a0a0f';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        // Only draw static twinkling stars - no parallax, no shooting stars, no nebulae
+        this.drawStars();
+        
+        requestAnimationFrame(() => this.animate());
+    }
+}
+
+// Initialize galaxy background when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    new GalaxyBackground();
+});
