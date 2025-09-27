@@ -37,3 +37,9 @@ const CONTRACT_ABI = [
 				"name": "author",
 				"type": "string"
 			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			},
