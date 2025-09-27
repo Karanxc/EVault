@@ -25,7 +25,7 @@ contract DocumentVault {
         string blockHash,
         string txHash
     );
-    unction uploadDocument(
+    function uploadDocument(
         string memory ipfsCid,
         string memory title,
         string memory description,
@@ -43,3 +43,4 @@ contract DocumentVault {
             documents.length - 1, ipfsCid, title, author, timestamp, blockHash, txHash
         );
     }
+}
