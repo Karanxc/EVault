@@ -156,6 +156,71 @@
             document.getElementById('signup-form').style.display = 'none';
         }
     }
+
+    async function handleLogin(e) {
+        e.preventDefault();
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        try {
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+            if (data.success && data.token) {
+                localStorage.setItem('token', data.token);
+                document.getElementById('success-title').textContent = 'Login Successful!';
+                document.getElementById('success-text').textContent = 'Redirecting to dashboard...';
+                document.getElementById('success-message').style.display = '';
+                setTimeout(() => window.location.href = 'upload.html', 1200);
+            } else {
+                alert(data.message || 'Login failed.');
+            }
+        } catch (err) {
+            alert('Login failed.');
+        }
+    }
+
     
- </script>
+    async function handleSignup(e) {
+        e.preventDefault();
+        const name = document.getElementById('signup-name').value;
+        const email = document.getElementById('signup-email').value;
+        const password = document.getElementById('signup-password').value;
+        const confirmPassword = document.getElementById('signup-confirm').value;
+        const terms = document.getElementById('terms').checked;
+        if (password !== confirmPassword) {
+            alert('Passwords do not match.');
+            return;
+        }
+        if (!terms) {
+            alert('You must agree to the Terms of Service and Privacy Policy.');
+            return;
+        }
+        try {
+            const res = await fetch('/api/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password })
+            });
+            const data = await res.json();
+            if (data.success && data.token) {
+                localStorage.setItem('token', data.token);
+                document.getElementById('success-title').textContent = 'Account Created Successfully!';
+                document.getElementById('success-text').textContent = 'Welcome to EVault. Redirecting to dashboard...';
+                document.getElementById('success-message').style.display = '';
+                setTimeout(() => window.location.href = 'upload.html', 1200);
+            } else {
+                alert(data.message || 'Signup failed.');
+            }
+        } catch (err) {
+            alert('Signup failed.');
+        }
+    }
+
+    </script>
     <script src="script.js"></script>
+
+</body>
+</html>
