@@ -25,3 +25,37 @@ const CONTRACT_ABI = [
 				"name": "id",
 				"type": "uint256"
 			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "title",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "author",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "timestamp",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "blockHash",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "txHash",
+				"type": "string"
+			}
+		],
+		"name": "DocumentUploaded",
+		"type": "event"
+	},
