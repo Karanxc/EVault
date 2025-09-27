@@ -1,22 +1,10 @@
-
-class GalaxyBackground {
-    constructor() {
-        this.canvas = document.getElementById('galaxy-canvas');
-        this.ctx = this.canvas.getContext('2d');
-        this.stars = [];
-        this.shootingStars = [];
-        this.nebulae = [];
-        this.mouse = { x: 0, y: 0 };
-        this.isMouseMoving = false;
-        this.mouseTimeout = null;
-        
-        this.init();
-    }
-    
-    init() {
-        this.resizeCanvas();
-        this.createStars();
-        this.bindEvents();
-        this.animate();
-    }
-    
+const express = require('express');
+const path = require('path');
+const bodyParser = require('body-parser');
+const crypto = require('crypto');
+const multer = require('multer');
+const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const axios = require('axios');
+const FormData = require('form-data');
+const { Web3 } = require('web3');

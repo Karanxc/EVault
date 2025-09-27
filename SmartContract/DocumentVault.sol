@@ -25,3 +25,21 @@ contract DocumentVault {
         string blockHash,
         string txHash
     );
+    unction uploadDocument(
+        string memory ipfsCid,
+        string memory title,
+        string memory description,
+        uint256 size,
+        uint256 timestamp,
+        string memory author,
+        string memory tags,
+        string memory blockHash,
+        string memory txHash
+    ) public {
+        documents.push(Document(
+            ipfsCid, title, description, size, timestamp, author, tags, blockHash, txHash
+        ));
+        emit DocumentUploaded(
+            documents.length - 1, ipfsCid, title, author, timestamp, blockHash, txHash
+        );
+    }
