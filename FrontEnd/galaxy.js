@@ -39,3 +39,70 @@ class GalaxyBackground {
             });
         }
     }
+
+     createNebulae() {
+        const numNebulae = 3;
+        this.nebulae = [];
+        
+        for (let i = 0; i < numNebulae; i++) {
+            this.nebulae.push({
+                x: Math.random() * this.canvas.width,
+                y: Math.random() * this.canvas.height,
+                radius: Math.random() * 200 + 100,
+                opacity: Math.random() * 0.1 + 0.05,
+                hue: Math.random() * 60 + 280, // Pink to purple range
+                parallaxFactor: Math.random() * 0.3 + 0.1,
+                originalX: 0,
+                originalY: 0
+            });
+            
+            this.nebulae[i].originalX = this.nebulae[i].x;
+            this.nebulae[i].originalY = this.nebulae[i].y;
+        }
+    }
+    
+    createShootingStar() {
+        if (Math.random() < 0.995) return; // Low probability
+        
+        const side = Math.floor(Math.random() * 4);
+        let startX, startY, endX, endY;
+        
+        // Start from random edge
+        switch(side) {
+            case 0: // Top
+                startX = Math.random() * this.canvas.width;
+                startY = -50;
+                endX = startX + (Math.random() * 300 - 150);
+                endY = this.canvas.height + 50;
+                break;
+            case 1: // Right
+                startX = this.canvas.width + 50;
+                startY = Math.random() * this.canvas.height;
+                endX = -50;
+                endY = startY + (Math.random() * 300 - 150);
+                break;
+            case 2: // Bottom
+                startX = Math.random() * this.canvas.width;
+                startY = this.canvas.height + 50;
+                endX = startX + (Math.random() * 300 - 150);
+                endY = -50;
+                break;
+            case 3: // Left
+                startX = -50;
+                startY = Math.random() * this.canvas.height;
+                endX = this.canvas.width + 50;
+                endY = startY + (Math.random() * 300 - 150);
+                break;
+        }
+        
+        this.shootingStars.push({
+            x: startX,
+            y: startY,
+            endX: endX,
+            endY: endY,
+            speed: Math.random() * 8 + 4,
+            size: Math.random() * 2 + 1,
+            life: 1.0,
+            decay: Math.random() * 0.02 + 0.01
+        });
+    }
