@@ -9,12 +9,12 @@ const axios = require('axios');
 const FormData = require('form-data');
 const { Web3 } = require('web3');
 
-// --- Config --
-const JWT_SECRET = 'JWT_SECRET_KEY_CHANGE_ME'; ///ADD A STRONG SECRET KEY HERE
-const PINATA_API_KEY = 'PINATA_API_KEY_CHANGE_ME'; ///ADD YOUR PINATA API KEY HERE
-const PINATA_API_SECRET = 'PINATA_API_SECRET_CHANGE_ME';   ///ADD YOUR PINATA API SECRET HERE
-const INFURA_ENDPOINT = 'https://INFURA_ENDPOINT_CHANGE_ME'; ///ADD YOUR INFURA ENDPOINT HERE
-const CONTRACT_ADDRESS = 'CONTRACT_ADDRESS_CHANGE_ME';  ///ADD YOUR DEPLOYED CONTRACT ADDRESS HERE
+
+const JWT_SECRET = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiIzMzhiZThiMy0zZjYyLTRiM2MtOTE2Mi0wM2VhM2U4N2M1MDMiLCJlbWFpbCI6Indhc3BsaXNiZXRoc2FsYW5kZXI2NkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicGluX3BvbGljeSI6eyJyZWdpb25zIjpbeyJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MSwiaWQiOiJGUkExIn0seyJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MSwiaWQiOiJOWUMxIn1dLCJ2ZXJzaW9uIjoxfSwibWZhX2VuYWJsZWQiOmZhbHNlLCJzdGF0dXMiOiJBQ1RJVkUifSwiYXV0aGVudGljYXRpb25UeXBlIjoic2NvcGVkS2V5Iiwic2NvcGVkS2V5S2V5IjoiMmM4MTYxNDhiZmIyNGJjMzU1YTQiLCJzY29wZWRLZXlTZWNyZXQiOiI5MDQ2NGIzZjE2YzU0YjExNDU3YmY5M2Y2Yzg0MDhhZTE0YjViNWZiZDc2OTU5MjRiY2RiOTU0M2E0NTc0ZmNiIiwiZXhwIjoxNzkwNTQ0OTgwfQ.S2Ij-j8zKdTvH04VZIXlCrPHqB36M-CQKWJCMPb_58g';
+const PINATA_API_KEY = '2c816148bfb24bc355a4';
+const PINATA_API_SECRET = '90464b3f16c54b11457bf93f6c8408ae14b5b5fbd7695924bcdb9543a4574fcb';
+const INFURA_ENDPOINT = 'https://sepolia.infura.io/v3/38c9f41e70ec4e5d9be4deb54666e0dc';
+const CONTRACT_ADDRESS = '0xb98CfaabC11dae6d74890A3714745687FF8f5529';
 const CONTRACT_ABI = [
 	{
 		"anonymous": false,
@@ -24,6 +24,12 @@ const CONTRACT_ABI = [
 				"internalType": "uint256",
 				"name": "id",
 				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "ipfsCid",
+				"type": "string"
 			},
 			{
 				"indexed": false,
@@ -189,6 +195,7 @@ const CONTRACT_ABI = [
 		],
 		"stateMutability": "view",
 		"type": "function"
+<<<<<<< HEAD
 	},
 	{
 		"inputs": [
@@ -244,10 +251,12 @@ const CONTRACT_ABI = [
 		"type": "function"
 	}
 ];
+
 const PRIVATE_KEY = '0xf141361d6fb18da6e2cf37b53fb373e64c82958bf56d880aa36cfc6155c07ee6';
 
-
 mongoose.connect('mongodb+srv://aayush:0cP6EZ8RR8OqJdFr@evault.ayq5wuc.mongodb.net/');
+
+
 
 const userSchema = new mongoose.Schema({
   name: String,
