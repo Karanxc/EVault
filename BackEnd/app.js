@@ -31,3 +31,9 @@ const CONTRACT_ABI = [
 				"name": "title",
 				"type": "string"
 			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "author",
+				"type": "string"
+			},
