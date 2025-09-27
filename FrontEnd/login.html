@@ -122,3 +122,37 @@
             <p id="success-text">Welcome to EVault. Redirecting to dashboard...</p>
         </div>
     </div>
+
+ <script src="galaxy.js"></script>
+    <script>
+    // --- Auth Navigation ---
+    function updateNav() {
+        const token = localStorage.getItem('token');
+        if (token) {
+            document.getElementById('upload-nav').style.display = '';
+            document.getElementById('logout-nav').style.display = '';
+            document.getElementById('auth-nav').style.display = 'none';
+        } else {
+            document.getElementById('upload-nav').style.display = 'none';
+            document.getElementById('logout-nav').style.display = 'none';
+            document.getElementById('auth-nav').style.display = '';
+        }
+    }
+    updateNav();
+
+    function logout() {
+        localStorage.removeItem('token');
+        updateNav();
+        window.location.href = 'index.html';
+    }
+
+    // --- Toggle Login/Signup ---
+    function toggleForm(form) {
+        if (form === 'signup') {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('signup-form').style.display = '';
+        } else {
+            document.getElementById('login-form').style.display = '';
+            document.getElementById('signup-form').style.display = 'none';
+        }
+    }
