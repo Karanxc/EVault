@@ -245,3 +245,95 @@ unction showDocumentDetails(docId) {
                 <a href="https://sepolia.etherscan.io/tx/${doc.txHash}" target="_blank" class="btn-secondary">Verify on Blockchain</a>
             </div>
         </div>
+         <style>
+            .document-details .detail-group {
+                margin-bottom: 20px;
+            }
+            
+            .document-details .detail-row {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .document-details label {
+                display: block;
+                font-weight: 600;
+                color: var(--neon-green);
+                margin-bottom: 8px;
+                font-size: 0.9rem;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            
+            .document-details p {
+                color: var(--text-primary);
+                margin: 0;
+                line-height: 1.5;
+            }
+            
+            .tag-list {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .tag {
+                background: rgba(0, 255, 136, 0.1);
+                color: var(--neon-green);
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 0.8rem;
+                border: 1px solid rgba(0, 255, 136, 0.3);
+            }
+            
+            .blockchain-info {
+                background: rgba(255, 255, 255, 0.02);
+                padding: 20px;
+                border-radius: 8px;
+                border: 1px solid var(--glass-border);
+                margin: 24px 0;
+            }
+            
+            .blockchain-info h4 {
+                margin-bottom: 16px;
+                color: var(--text-primary);
+                font-size: 1.1rem;
+            }
+            
+            .hash-value {
+                font-family: 'Monaco', monospace;
+                font-size: 0.85rem;
+                background: rgba(255, 255, 255, 0.05);
+                padding: 8px 12px;
+                border-radius: 4px;
+                border: 1px solid var(--glass-border);
+                word-break: break-all;
+            }
+            
+            .document-actions {
+                display: flex;
+                gap: 12px;
+                margin-top: 24px;
+            }
+            
+            .document-actions button {
+                flex: 1;
+                padding: 12px 20px;
+                border: none;
+                border-radius: 6px;
+                font-family: inherit;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+        </style>
+    `;
+    
+    modal.classList.add('active');
+    gsap.fromTo(modal.querySelector('.modal-content'), 
+        {scale: 0.8, opacity: 0}, 
+        {scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.7)"}
+    );
+}
