@@ -385,3 +385,51 @@ function setupNavigation() {
         });
     }
 }
+
+function initializePage() {
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    checkAuthStatus();
+    setupNavigation();
+
+    if (currentPage === 'search.html') {
+        performDocumentSearch();
+        document.getElementById('search-input').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') performDocumentSearch();
+        });
+        document.getElementById('search-input').addEventListener('input', performSearchDebounced);
+        document.getElementById('date-filter').addEventListener('change', applyFilters);
+    }
+
+    setupAnimations();
+}
+
+function setupAnimations() {
+    const fadeElements = document.querySelectorAll('.about, .how-it-works, .auth-form, .upload-form, .search-controls');
+    fadeElements.forEach(element => {
+        if (element) {
+            gsap.fromTo(element, 
+                {opacity: 0, y: 50}, 
+                {opacity: 1, y: 0, duration: 1, ease: "power2.out", delay: 0.2}
+            );
+        }
+    });
+    const steps = document.querySelectorAll('.step');
+    if (steps.length > 0) {
+        gsap.fromTo(steps, 
+            {opacity: 0, y: 30}, 
+            {opacity: 1, y: 0, duration: 0.8, stagger: 0.2, ease: "power2.out", delay: 0.5}
+        );
+    }
+    const features = document.querySelectorAll('.feature');
+    if (features.length > 0) {
+        gsap.fromTo(features, 
+            {opacity: 0, x: -30}, 
+            {opacity: 1, x: 0, duration: 0.8, stagger: 0.2, ease: "power2.out", delay: 0.8}
+        );
+    }
+}
+
+document.addEventListener('DOMContentLoaded', initializePage);
+window.addEventListener('error', (e) => {
+    console.error('Application error:', e.error);
+});
