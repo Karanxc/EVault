@@ -75,3 +75,80 @@
             </div>
         </div>
     </section>
+
+    <section class="search-results">
+        <div class="container">
+            <div class="results-header">
+                <h2 id="results-count">Recent Documents</h2>
+                <div class="view-options">
+                    <button onclick="setView('grid')" class="view-btn active" data-view="grid">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                    </button>
+                    <button onclick="setView('list')" class="view-btn" data-view="list">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="8" y1="6" x2="21" y2="6"></line>
+                            <line x1="8" y1="12" x2="21" y2="12"></line>
+                            <line x1="8" y1="18" x2="21" y2="18"></line>
+                            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="results-container" id="results-container">
+                <!-- Search results will be populated here -->
+            </div>
+            
+            <div class="no-results" id="no-results" style="display: none;">
+                <div class="no-results-content">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <h3>No Documents Found</h3>
+                    <p>Try adjusting your search terms or filters</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <div class="modal-overlay" id="document-modal">
+        <div class="modal-content glass-card" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3 id="modal-title">Document Details</h3>
+                <button onclick="closeModal()" class="close-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Document details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="galaxy.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Enable modal close when clicking outside modal-content
+        document.addEventListener('DOMContentLoaded', function() {
+            const modalOverlay = document.getElementById('document-modal');
+            if (modalOverlay) {
+                modalOverlay.addEventListener('click', function(e) {
+                    if (e.target === modalOverlay) closeModal();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
