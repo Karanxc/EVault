@@ -1,5 +1,9 @@
+"engines": {
+  "node": ">=18"
+}
+,
 {
-  "name": "legalvault",
+  "name": "Evault",
   "version": "1.0.0",
   "description": "",
   "license": "ISC",
