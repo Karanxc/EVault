@@ -110,3 +110,34 @@
             </form>
         </div>
     </div>
+
+
+
+    <div class="success-message" id="upload-success" style="display: none;">
+        <div class="success-content glass-card">
+            <div class="success-icon">✓</div>
+            <h3>Document Uploaded Successfully!</h3>
+            <p>Your document has been secured on the blockchain</p>
+            <div class="transaction-info">
+                <p><strong>Transaction ID:</strong> <span id="transaction-id"></span></p>
+                <p><strong>Block Hash:</strong> <span id="block-hash"></span></p>
+                <p><strong>Timestamp:</strong> <span id="timestamp"></span></p>
+                <p><strong>Download:</strong> <a id="download-link" href="#" target="_blank">Download Document</a></p>
+                <p><strong>Verify:</strong> <a id="verify-link" href="#" target="_blank">Verify on Blockchain</a></p>
+            </div>
+            <div class="success-actions">
+                <button onclick="uploadAnother()" class="btn-secondary">Upload Another</button>
+                <button onclick="viewDocuments()" class="btn-primary">View Documents</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="blocked-access" id="blocked-access" style="display: none;">
+        <div class="blocked-content glass-card">
+            <div class="blocked-icon">🔒</div>
+            <h3>Access Restricted</h3>
+            <p>Login to upload documents to the blockchain</p>
+            <button onclick="goToLogin()" class="btn-primary">Sign In</button>
+        </div>
+    </div>
