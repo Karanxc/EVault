@@ -141,3 +141,130 @@
             <button onclick="goToLogin()" class="btn-primary">Sign In</button>
         </div>
     </div>
+
+    
+    <script src="galaxy.js"></script>
+    <script>
+
+    function updateNav() {
+        const token = localStorage.getItem('token');
+        if (token) {
+            document.getElementById('upload-nav').style.display = '';
+            document.getElementById('logout-nav').style.display = '';
+            document.getElementById('auth-nav').style.display = 'none';
+        } else {
+            document.getElementById('upload-nav').style.display = 'none';
+            document.getElementById('logout-nav').style.display = 'none';
+            document.getElementById('auth-nav').style.display = '';
+        }
+    }
+    updateNav();
+
+    function logout() {
+        localStorage.removeItem('token');
+        updateNav();
+        window.location.href = 'index.html';
+    }
+
+
+    if (!localStorage.getItem('token')) {
+        document.getElementById('upload-form').style.display = 'none';
+        document.getElementById('blocked-access').style.display = '';
+    }
+
+    function goToLogin() {
+        window.location.href = 'login.html';
+    }
+
+
+    document.getElementById('doc-file').onchange = function() {
+        const file = this.files[0];
+        if (file) {
+            document.getElementById('file-text').textContent = file.name;
+            document.getElementById('file-info').style.display = '';
+            document.getElementById('file-info').textContent = `Selected: ${file.name} (${Math.round(file.size/1024)} KB)`;
+        } else {
+            document.getElementById('file-text').textContent = 'Choose file or drag and drop';
+            document.getElementById('file-info').style.display = 'none';
+        }
+    };
+
+    document.getElementById('document-form').onsubmit = async function(e) {
+        e.preventDefault();
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('You must be logged in to upload documents.');
+            return;
+        }
+        const title = document.getElementById('doc-title').value;
+        const description = document.getElementById('doc-description').value;
+        const tags = document.getElementById('doc-tags').value;
+        const fileInput = document.getElementById('doc-file');
+        const terms = document.getElementById('terms-upload').checked;
+        if (!terms) {
+            alert('You must confirm authenticity and rights to upload.');
+            return;
+        }
+        if (!fileInput.files.length) {
+            alert('Please select a file.');
+            return;
+        }
+
+        document.getElementById('upload-btn').disabled = true;
+        document.querySelector('.btn-text').style.display = 'none';
+        document.querySelector('.btn-loading').style.display = '';
+
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('description', description);
+        formData.append('tags', tags);
+        formData.append('file', fileInput.files[0]);
+
+        try {
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                body: formData
+            });
+            const data = await res.json();
+
+            document.getElementById('upload-btn').disabled = false;
+            document.querySelector('.btn-text').style.display = '';
+            document.querySelector('.btn-loading').style.display = 'none';
+
+            if (data.success && data.doc) {
+                document.getElementById('upload-form').style.display = 'none';
+                document.getElementById('upload-success').style.display = '';
+                document.getElementById('transaction-id').textContent = data.doc.txHash || '';
+                document.getElementById('block-hash').textContent = data.doc.blockHash || '';
+                document.getElementById('timestamp').textContent = data.doc.timestamp ? new Date(data.doc.timestamp * 1000).toLocaleString() : '';
+                document.getElementById('download-link').href = data.doc.ipfsCid ? `https://gateway.pinata.cloud/ipfs/${data.doc.ipfsCid}` : '#';
+                document.getElementById('verify-link').href = data.doc.txHash ? `https://sepolia.etherscan.io/tx/${data.doc.txHash}` : '#';
+            } else {
+                alert(data.message || 'Upload failed.');
+            }
+        } catch (err) {
+            document.getElementById('upload-btn').disabled = false;
+            document.querySelector('.btn-text').style.display = '';
+            document.querySelector('.btn-loading').style.display = 'none';
+            alert('Upload failed.');
+        }
+    };
+
+    function uploadAnother() {
+        document.getElementById('upload-success').style.display = 'none';
+        document.getElementById('upload-form').style.display = '';
+        document.getElementById('document-form').reset();
+        document.getElementById('file-text').textContent = 'Choose file or drag and drop';
+        document.getElementById('file-info').style.display = 'none';
+    }
+
+    function viewDocuments() {
+        window.location.href = 'search.html';
+    }
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
